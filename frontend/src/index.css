@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, #0f172a 0%, #050816 40%),
+    radial-gradient(circle at bottom right, #001a10 0%, transparent 30%);
+  color: white;
+  font-family: 'Inter', sans-serif;
+}
+
+/* CRITICAL FIX: Don't apply these styles to Monaco Editor */
+button {
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+input {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Enhanced scrollbar styling - but exclude Monaco Editor */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2d3a4f;
+}
+
+/* IMPORTANT: Prevent global styles from affecting Monaco Editor */
+.monaco-editor *,
+.monaco-editor,
+.monaco-scrollable-element,
+.monaco-editor .overflow-guard,
+.monaco-editor .view-lines,
+.monaco-editor .view-line {
+  transition: none !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+/* Ensure Monaco Editor gets proper keyboard focus */
+.monaco-editor textarea:focus {
+  outline: none !important;
+}
+
+/* Disable any pointer-events interference */
+.monaco-editor .monaco-editor-background,
+.monaco-editor .margin-view-overlays {
+  pointer-events: auto !important;
+}
