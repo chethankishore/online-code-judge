@@ -131,7 +131,7 @@ import ProblemDetail from './pages/ProblemDetail';
 import CompleteProfile from './pages/CompleteProfile';
 import SubmissionDetail from './pages/SubmissionDetail';
 import Leaderboard from './pages/Leaderboard';
-import LandingPage from "./pages/LandingPage.jsx";
+import LandingPage from "./pages/LandingPage";
 import SolvedProblems from './pages/SolvedProblems'; // ✅ ADD THIS
 
 export default function App() {
