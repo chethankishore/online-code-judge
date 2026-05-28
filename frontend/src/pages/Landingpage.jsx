@@ -801,6 +801,7 @@ export default function LandingPage() {
             }}>
               © CODEJUDGE — 呪術廻戦 CODE ARENA — WHERE SORCERERS ARE FORGED
             </div>
+            
           </section>
         </div>
       )}
