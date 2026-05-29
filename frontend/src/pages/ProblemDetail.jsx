@@ -1507,6 +1507,7 @@ import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import TierLocked from '../components/TierLocked';
 import GojoDomain from '../components/GojoDomain';
+import Editor from '@monaco-editor/react';
 
 // ------------------------------
 // Blood Canvas & Cursed Lines
@@ -2050,24 +2051,29 @@ export default function ProblemDetail() {
               </div>
             </div>
 
-            <textarea
-              ref={textareaRef}
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              style={{
-                width: '100%',
-                height: result ? '45vh' : '60vh',
-                background: '#1a0000',
-                color: '#ffdddd',
-                fontFamily: "'Fira Code', monospace",
-                fontSize: '14px',
-                padding: '16px',
-                border: '1px solid #8b0000',
-                outline: 'none',
-                resize: 'vertical',
-              }}
-              spellCheck={false}
-            />
+            <div style={{
+              width: '100%',
+              height: result ? '45vh' : '60vh',
+              border: '1px solid #8b0000',
+              overflow: 'hidden',
+              background: '#030000',
+            }}>
+              <Editor
+                height="100%"
+                language={language}
+                theme="vs-dark"
+                value={code}
+                onChange={(val) => setCode(val || '')}
+                options={{
+                  fontSize: 14,
+                  minimap: { enabled: false },
+                  lineNumbers: 'on',
+                  fontFamily: "'Fira Code', monospace",
+                  scrollBeyondLastLine: false,
+                  automaticLayout: true,
+                }}
+              />
+            </div>
 
             {result && (
               <div style={styles.resultPanel}>
