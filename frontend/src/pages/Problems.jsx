@@ -906,7 +906,6 @@ import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 import toast from 'react-hot-toast';
 import TierLocked from '../components/TierLocked';
-import SukunaDomain from '../components/SukunaDomain';
 
 // --------------------------------------------------------------
 // Blood Canvas & Cursed Lines (same as in other cursed pages)
@@ -1068,8 +1067,6 @@ export default function Problems() {
   const [lockedDifficulty, setLockedDifficulty] = useState(null);
   const [searchTrigger, setSearchTrigger] = useState(0);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
-  const [showSukuna, setShowSukuna] = useState(false);
-  const [selectedProblem, setSelectedProblem] = useState(null);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -1129,15 +1126,7 @@ export default function Problems() {
       toast.error(`🔒 Complete all Easy problems first to unlock ${problem.difficulty}!`);
       return;
     }
-    setSelectedProblem(problem);
-    setShowSukuna(true);
-  };
-
-  const onSukunaComplete = () => {
-    setShowSukuna(false);
-    if (selectedProblem) {
-      navigate(`/problems/${selectedProblem._id}`);
-    }
+    navigate(`/problems/${problem._id}`);
   };
 
   if (loading) return <div style={styles.loading}>Loading problems...</div>;
@@ -1148,9 +1137,6 @@ export default function Problems() {
 
   return (
     <>
-      {showSukuna && selectedProblem && (
-        <SukunaDomain onComplete={onSukunaComplete} problemTitle={selectedProblem.title} />
-      )}
 
       <BloodCanvas />
       <CursedLines />

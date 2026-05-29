@@ -1508,6 +1508,7 @@ import toast from 'react-hot-toast';
 import TierLocked from '../components/TierLocked';
 import GojoDomain from '../components/GojoDomain';
 import PrisonRealm from '../components/PrisonRealm';
+import SukunaDomain from '../components/SukunaDomain';
 import Editor from '@monaco-editor/react';
 
 // ------------------------------
@@ -1660,58 +1661,6 @@ function CursedLines() {
 }
 // ---------------------------------------------------------------
 
-// ---------- Sukuna Entrance Animation (small & fast) ----------
-function SukunaEntrance({ onComplete }) {
-  const [phase, setPhase] = useState(0);
-
-  useEffect(() => {
-    const timers = [
-      setTimeout(() => setPhase(1), 100),
-      setTimeout(() => setPhase(2), 400),
-      setTimeout(() => setPhase(3), 800),
-      setTimeout(() => onComplete(), 1200),
-    ];
-    return () => timers.forEach(clearTimeout);
-  }, []);
-
-  if (phase >= 3) return null;
-
-  return (
-    <div style={sukunaStyles.overlay}>
-      <style>{`
-        @keyframes sukunaCrack { from{stroke-dashoffset:400} to{stroke-dashoffset:0} }
-        @keyframes sukunaText { from{opacity:0;transform:scale(2)} to{opacity:1;transform:scale(1)} }
-      `}</style>
-      {phase >= 1 && (
-        <svg style={sukunaStyles.svg}>
-          <line x1="30%" y1="30%" x2="70%" y2="70%" stroke="#ff0000" strokeWidth="2" style={{ strokeDasharray: 400, strokeDashoffset: 400, animation: 'sukunaCrack 0.5s ease forwards' }} />
-          <line x1="70%" y1="30%" x2="30%" y2="70%" stroke="#ff0000" strokeWidth="2" style={{ strokeDasharray: 400, strokeDashoffset: 400, animation: 'sukunaCrack 0.5s ease forwards 0.1s' }} />
-        </svg>
-      )}
-      {phase >= 2 && (
-        <div style={sukunaStyles.text}>MALEVOLENT SHRINE</div>
-      )}
-    </div>
-  );
-}
-
-const sukunaStyles = {
-  overlay: {
-    position: 'fixed', inset: 0, zIndex: 9998, background: 'rgba(0,0,0,0.9)',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    pointerEvents: 'none',
-  },
-  svg: { position: 'absolute', width: '100%', height: '100%' },
-  text: {
-    color: '#ff4444', fontSize: 'clamp(20px,5vw,40px)',
-    fontFamily: "'Cinzel Decorative', serif", letterSpacing: '0.2em',
-    animation: 'sukunaText 0.5s ease-out',
-    textShadow: '0 0 20px #ff0000',
-  },
-};
-
-// ---------------------------------------------------------------
-
 const starterTemplates = {
   javascript: `// Write your solution here\nfunction solution() {\n  \n}`,
   python: `# Write your solution here\ndef solution():\n    pass`,
@@ -1758,7 +1707,7 @@ export default function ProblemDetail() {
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
   const [isLocked, setIsLocked] = useState(false);
   const [lockedDifficulty, setLockedDifficulty] = useState('');
-  const [showSukunaEntrance, setShowSukunaEntrance] = useState(true);
+  const [showSukuna, setShowSukuna] = useState(true);
   const [showGojo, setShowGojo] = useState(false);
   const [showPrisonRealm, setShowPrisonRealm] = useState(false);
   const [pendingSuccessData, setPendingSuccessData] = useState(null);
@@ -1775,7 +1724,7 @@ export default function ProblemDetail() {
       if (!user?.unlockedTiers?.includes(p.difficulty)) {
         setIsLocked(true);
         setLockedDifficulty(p.difficulty);
-        setShowSukunaEntrance(false);
+        setShowSukuna(false);
         return;
       }
       setProblem(p);
@@ -1951,8 +1900,8 @@ export default function ProblemDetail() {
     }
   };
 
-  const onSukunaEntranceComplete = () => {
-    setShowSukunaEntrance(false);
+  const onSukunaComplete = () => {
+    setShowSukuna(false);
   };
 
   const onPrisonRealmComplete = () => {
@@ -1983,7 +1932,7 @@ export default function ProblemDetail() {
 
   return (
     <>
-      {showSukunaEntrance && <SukunaEntrance onComplete={onSukunaEntranceComplete} />}
+      {showSukuna && <SukunaDomain onComplete={onSukunaComplete} problemTitle={problem?.title} />}
       {showGojo && <GojoDomain onComplete={onGojoComplete} problemTitle={problem?.title} />}
       {showPrisonRealm && (
         <PrisonRealm 
