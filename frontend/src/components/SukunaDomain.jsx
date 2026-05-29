@@ -130,6 +130,12 @@ export default function SukunaDomain({ onComplete, problemTitle }) {
   const [phase, setPhase] = useState(0);
 
   useEffect(() => {
+    const audio = new Audio('/sukuna-ganbare.mp3');
+    audio.volume = 0.7;
+    audio.play().catch(err => {
+      console.warn("Audio playback failed or was blocked by browser autoplay policy:", err);
+    });
+
     const timers = [
       setTimeout(() => setPhase(1), 300),
       setTimeout(() => setPhase(2), 900),
@@ -138,7 +144,10 @@ export default function SukunaDomain({ onComplete, problemTitle }) {
       setTimeout(() => setPhase(5), 3800),
       setTimeout(() => onComplete(), 4200),
     ];
-    return () => timers.forEach(clearTimeout);
+    return () => {
+      timers.forEach(clearTimeout);
+      audio.pause();
+    };
   }, []);
 
   if (phase >= 5) return null;
