@@ -81,20 +81,23 @@ const registerUser = async (
         });
     }
 
-    const userExists =
-      await User.findOne({
-        $or: [
-          { email },
-          { username },
-        ],
-      });
-
-    if (userExists) {
+    const emailExists = await User.findOne({ email });
+    if (emailExists) {
       return res
         .status(400)
         .json({
           message:
-            'User already exists',
+            'Email already exists',
+        });
+    }
+
+    const usernameExists = await User.findOne({ username });
+    if (usernameExists) {
+      return res
+        .status(400)
+        .json({
+          message:
+            'Username already exists',
         });
     }
 
@@ -191,7 +194,7 @@ const completeProfile =
           .status(400)
           .json({
             message:
-              'Username already taken',
+              'Username already exists',
           });
       }
 
