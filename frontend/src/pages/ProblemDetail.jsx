@@ -1507,6 +1507,7 @@ import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import TierLocked from '../components/TierLocked';
 import GojoDomain from '../components/GojoDomain';
+import PrisonRealm from '../components/PrisonRealm';
 import Editor from '@monaco-editor/react';
 
 // ------------------------------
@@ -1759,7 +1760,9 @@ export default function ProblemDetail() {
   const [lockedDifficulty, setLockedDifficulty] = useState('');
   const [showSukunaEntrance, setShowSukunaEntrance] = useState(true);
   const [showGojo, setShowGojo] = useState(false);
+  const [showPrisonRealm, setShowPrisonRealm] = useState(false);
   const [pendingSuccessData, setPendingSuccessData] = useState(null);
+  const [pendingFailureData, setPendingFailureData] = useState(null);
 
   useEffect(() => {
     fetchProblem();
@@ -1846,8 +1849,12 @@ export default function ProblemDetail() {
       }));
       const allPassed = fixedResults.length > 0 && fixedResults.every(tc => tc.passed === true);
       setResult({ verdict: allPassed ? 'Accepted' : 'Wrong Answer', results: fixedResults, runtime: data.totalExecutionTime, mode: 'run' });
-      if (allPassed) toast.success('Sample test passed! 🎉');
-      else toast.error('Wrong Answer');
+      if (allPassed) {
+        toast.success('Sample test passed! 🎉');
+      } else {
+        setPendingFailureData({ testsPassed: 0, totalTests: 1 });
+        setShowPrisonRealm(true);
+      }
     } catch (err) {
       toast.error('Execution failed');
       setResult({ verdict: 'Error', error: err.message, mode: 'run' });
@@ -1924,7 +1931,8 @@ export default function ProblemDetail() {
         setPendingSuccessData({ testsPassed, totalTests: fixedResults.length });
         setShowGojo(true);
       } else {
-        toast.info(`${testsPassed}/${fixedResults.length} test cases passed`);
+        setPendingFailureData({ testsPassed, totalTests: fixedResults.length });
+        setShowPrisonRealm(true);
       }
     } catch (err) {
       toast.error('Submission failed');
@@ -1947,6 +1955,16 @@ export default function ProblemDetail() {
     setShowSukunaEntrance(false);
   };
 
+  const onPrisonRealmComplete = () => {
+    setShowPrisonRealm(false);
+    if (pendingFailureData) {
+      toast.error('Wrong Answer - Code Sealed in the Prison Realm 🔒', {
+        style: { background: '#1a0000', color: '#ff4444' }
+      });
+      setPendingFailureData(null);
+    }
+  };
+
   const onMouse = (e) => setMouse({ x: e.clientX, y: e.clientY });
 
   if (loading) {
@@ -1967,6 +1985,13 @@ export default function ProblemDetail() {
     <>
       {showSukunaEntrance && <SukunaEntrance onComplete={onSukunaEntranceComplete} />}
       {showGojo && <GojoDomain onComplete={onGojoComplete} problemTitle={problem?.title} />}
+      {showPrisonRealm && (
+        <PrisonRealm 
+          onComplete={onPrisonRealmComplete} 
+          testsPassed={pendingFailureData?.testsPassed} 
+          totalTests={pendingFailureData?.totalTests} 
+        />
+      )}
       <BloodCanvas />
       <CursedLines />
       <div style={{
