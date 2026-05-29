@@ -130,7 +130,7 @@ export default function SukunaDomain({ onComplete, problemTitle }) {
   const [phase, setPhase] = useState(0);
 
   useEffect(() => {
-    const audio = new Audio('/sukuna-ganbare.mp3');
+    const audio = new Audio('/sukuna-domain.mp3');
     audio.volume = 0.7;
     audio.play().catch(err => {
       console.warn("Audio playback failed or was blocked by browser autoplay policy:", err);
