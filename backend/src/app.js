@@ -53,6 +53,8 @@ app.use(
  * SESSION
  */
 
+const isProd = process.env.NODE_ENV === 'production' || (process.env.FRONTEND_URL && !process.env.FRONTEND_URL.includes('localhost'));
+
 app.use(
   session({
     secret:
@@ -63,13 +65,11 @@ app.use(
     saveUninitialized: false,
 
     cookie: {
-      secure:
-        process.env.NODE_ENV ===
-        'production',
+      secure: isProd,
 
       httpOnly: true,
 
-      sameSite: 'lax',
+      sameSite: isProd ? 'none' : 'lax',
 
       maxAge:
         7 *

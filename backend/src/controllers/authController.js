@@ -1,6 +1,8 @@
 const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
 
+const isProd = process.env.NODE_ENV === 'production' || (process.env.FRONTEND_URL && !process.env.FRONTEND_URL.includes('localhost'));
+
 const getFrontendUrl = (req) => {
   if (process.env.FRONTEND_URL) return process.env.FRONTEND_URL;
   const host = req ? (req.get('host') || '') : '';
@@ -23,10 +25,8 @@ const sendTokenResponse = (
 
   res.cookie('token', token, {
     httpOnly: true,
-    secure:
-      process.env.NODE_ENV ===
-      'production',
-    sameSite: 'lax',
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'lax',
     maxAge:
       7 * 24 * 60 * 60 * 1000,
   });
@@ -370,10 +370,8 @@ const oauthSuccess = (
 
     res.cookie('token', token, {
       httpOnly: true,
-      secure:
-        process.env.NODE_ENV ===
-        'production',
-      sameSite: 'lax',
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
       maxAge:
         7 *
         24 *
