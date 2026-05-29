@@ -555,16 +555,24 @@ const normalizeOutput = (output) => {
 
 const formatInput = (input) => {
   if (!input) return '';
-  if (typeof input !== 'string') return String(input);
-  if (input.includes('[') || input.includes(',') || input.includes(']')) {
-    let formatted = input
-      .replace(/[\[\]]/g, '')
-      .replace(/,/g, ' ')
-      .replace(/\s+/g, ' ')
-      .trim();
-    return formatted.split('\n').join('\n');
+  const strInput = typeof input !== 'string' ? String(input) : input;
+  
+  // If the input consists purely of bracket characters, do NOT format/strip them!
+  if (/^[()\[\]{}]+$/.test(strInput.trim())) {
+    return strInput;
   }
-  return input;
+  
+  if (strInput.includes('[') || strInput.includes(',') || strInput.includes(']')) {
+    if (strInput.trim().startsWith('[') && strInput.trim().endsWith(']')) {
+      let formatted = strInput
+        .replace(/[\[\]]/g, '')
+        .replace(/,/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+      return formatted.split('\n').join('\n');
+    }
+  }
+  return strInput;
 };
 
 const fixLambdaResponse = (lambdaResponse) => {

@@ -1752,10 +1752,19 @@ export default function ProblemDetail() {
 
   const formatInput = (input) => {
     if (!input) return '';
-    if (input.includes('[') || input.includes(',')) {
-      return input.replace(/[\[\]]/g, '').replace(/,/g, ' ').trim();
+    const strInput = typeof input !== 'string' ? String(input) : input;
+    
+    // If the input consists purely of bracket characters, do NOT format/strip them!
+    if (/^[()\[\]{}]+$/.test(strInput.trim())) {
+      return strInput;
     }
-    return input;
+    
+    if (strInput.includes('[') || strInput.includes(',')) {
+      if (strInput.trim().startsWith('[') && strInput.trim().endsWith(']')) {
+        return strInput.replace(/[\[\]]/g, '').replace(/,/g, ' ').trim();
+      }
+    }
+    return strInput;
   };
 
   const callLambda = async ({ testCases }) => {
@@ -1835,11 +1844,8 @@ export default function ProblemDetail() {
       const data = await callLambda({ testCases });
       const testResults = data.results || [];
       const fixedResults = testResults.map(tc => {
-        const actualNormalized = (tc.actual || '').replace(/\s/g, '');
-        const expectedNormalized = (tc.expected || '').replace(/\s/g, '');
-        const passed = actualNormalized === expectedNormalized;
         return {
-          passed,
+          passed: tc.passed === true,
           input: tc.input,
           output: tc.actual || tc.output,
           expected: tc.expected,
