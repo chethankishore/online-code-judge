@@ -1,6 +1,11 @@
 const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
 
+const FRONTEND_URL = process.env.FRONTEND_URL || 
+  (process.env.NODE_ENV === 'production' 
+    ? 'https://online-code-judge-pi.vercel.app' 
+    : 'http://localhost:5173');
+
 /**
  * Helper Function
  */
@@ -378,16 +383,16 @@ const oauthSuccess = (
         .isProfileComplete
     ) {
       res.redirect(
-        `${process.env.FRONTEND_URL}/complete-profile`
+        `${FRONTEND_URL}/complete-profile`
       );
     } else {
       res.redirect(
-        `${process.env.FRONTEND_URL}/dashboard`
+        `${FRONTEND_URL}/dashboard`
       );
     }
   } catch (error) {
     res.redirect(
-      `${process.env.FRONTEND_URL}/login?error=oauth_failed`
+      `${FRONTEND_URL}/login?error=oauth_failed`
     );
   }
 };
@@ -401,7 +406,7 @@ const oauthFailure = (
   res
 ) => {
   res.redirect(
-    `${process.env.FRONTEND_URL}/login?error=oauth_failed`
+    `${FRONTEND_URL}/login?error=oauth_failed`
   );
 };
 

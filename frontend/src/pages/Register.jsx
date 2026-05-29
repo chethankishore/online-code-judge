@@ -246,7 +246,11 @@ function CursedLines() {
 }
 // ------------------------------------------------------------
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL
+  ? import.meta.env.VITE_API_URL.replace(/\/$/, '')
+  : import.meta.env.PROD
+    ? 'https://online-code-judge-ev5k.onrender.com'
+    : 'http://localhost:5000';
 
 export default function Register() {
   const [form, setForm] = useState({ firstName: '', lastName: '', username: '', email: '', password: '', confirmPassword: '' });

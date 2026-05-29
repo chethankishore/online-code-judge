@@ -308,6 +308,12 @@ function CursedLines() {
 }
 // ------------------------------------------------------------
 
+const API_URL = import.meta.env.VITE_API_URL
+  ? import.meta.env.VITE_API_URL.replace(/\/$/, '')
+  : import.meta.env.PROD
+    ? 'https://online-code-judge-ev5k.onrender.com'
+    : 'http://localhost:5000';
+
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -518,7 +524,7 @@ export default function Login() {
             {/* OAuth Buttons */}
             <div style={{ display: 'flex', gap: 16 }}>
               <a
-                href="http://localhost:5000/api/auth/google"
+                href={`${API_URL}/api/auth/google`}
                 className="oauth-btn"
                 style={{
                   flex: 1,
@@ -545,7 +551,7 @@ export default function Login() {
                 Google
               </a>
               <a
-                href="http://localhost:5000/api/auth/github"
+                href={`${API_URL}/api/auth/github`}
                 className="oauth-btn"
                 style={{
                   flex: 1,
