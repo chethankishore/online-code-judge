@@ -1,10 +1,14 @@
 const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
 
-const FRONTEND_URL = process.env.FRONTEND_URL || 
-  (process.env.NODE_ENV === 'production' 
-    ? 'https://online-code-judge-pi.vercel.app' 
-    : 'http://localhost:5173');
+const getFrontendUrl = (req) => {
+  if (process.env.FRONTEND_URL) return process.env.FRONTEND_URL;
+  const host = req ? (req.get('host') || '') : '';
+  if (host.includes('onrender.com') || host.includes('render') || process.env.NODE_ENV === 'production') {
+    return 'https://online-code-judge-pi.vercel.app';
+  }
+  return 'http://localhost:5173';
+};
 
 /**
  * Helper Function
@@ -378,21 +382,23 @@ const oauthSuccess = (
         1000,
     });
 
+    const frontendUrl = getFrontendUrl(req);
+
     if (
       !req.user
         .isProfileComplete
     ) {
       res.redirect(
-        `${FRONTEND_URL}/complete-profile`
+        `${frontendUrl}/complete-profile`
       );
     } else {
       res.redirect(
-        `${FRONTEND_URL}/dashboard`
+        `${frontendUrl}/dashboard`
       );
     }
   } catch (error) {
     res.redirect(
-      `${FRONTEND_URL}/login?error=oauth_failed`
+      `${getFrontendUrl(req)}/login?error=oauth_failed`
     );
   }
 };
@@ -406,7 +412,7 @@ const oauthFailure = (
   res
 ) => {
   res.redirect(
-    `${FRONTEND_URL}/login?error=oauth_failed`
+    `${getFrontendUrl(req)}/login?error=oauth_failed`
   );
 };
 
